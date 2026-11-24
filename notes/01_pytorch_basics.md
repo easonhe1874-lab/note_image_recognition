@@ -141,3 +141,189 @@ print(a.shape)   # torch.Size([2, 2])
 
 随机张量每次运行时的具体数值可能不同。
 ```
+# Tensor 切片与索引
+
+本文介绍 PyTorch Tensor 的基本索引、切片，以及 `torch.chunk`、`torch.cat` 和 `torch.unsqueeze` 的用法。
+
+## 一维 Tensor 索引
+
+一维 Tensor 的索引方式与 Python 列表类似。索引从 `0` 开始，范围是 `0` 到 `size - 1`。
+
+```python
+import torch
+
+t = torch.arange(5)
+
+print(t)
+print(t[1])
+print(t[0:3])
+```
+
+输出：
+
+```text
+tensor([0, 1, 2, 3, 4])
+tensor(1)
+tensor([0, 1, 2])
+```
+
+当索引单个元素时，返回一个标量 Tensor；当索引一个范围时，返回包含对应元素的新 Tensor。切片的结束索引不包含在结果中，因此 `t[0:3]` 取的是索引 `0`、`1`、`2` 对应的元素。
+
+### 负索引
+
+Tensor 支持负索引。`-1` 表示最后一个元素，`-2` 表示倒数第二个元素，以此类推。
+
+```python
+print(t[-1])     # 最后一个元素
+print(t[-3:-1])  # 从倒数第三个元素到倒数第二个元素
+print(t[:-1])    # 除最后一个元素以外的所有元素
+```
+
+输出：
+
+```text
+tensor(4)
+tensor([2, 3])
+tensor([0, 1, 2, 3])
+```
+
+## Tensor 切片
+
+切片的基本格式为：
+
+```python
+tensor[start:stop:step]
+```
+
+其中：
+
+- `start`：起始索引，包含在结果中。
+- `stop`：结束索引，不包含在结果中。
+- `step`：步长。
+
+也可以使用 Python 内置的 `slice` 对象：
+
+```python
+s = slice(2, 5, 2)
+
+print(t[s])
+```
+
+输出：
+
+```text
+tensor([2, 4])
+```
+
+以上切片从索引 `2` 开始，到索引 `5` 之前结束，步长为 `2`。
+
+## 二维 Tensor 索引与切片
+
+二维 Tensor 可以分别对行和列进行索引。索引某一行时，返回的 Tensor 维度会减少。
+
+```python
+tensor = torch.tensor([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [10, 11, 12],
+])
+
+print(tensor[0])        # 第一行
+print(tensor[0, 1])     # 第一行、第二列
+print(tensor[0:3:2, :]) # 选取第一行和第三行，保留所有列
+```
+
+输出：
+
+```text
+tensor([1, 2, 3])
+tensor(2)
+tensor([
+    [1, 2, 3],
+    [7, 8, 9],
+])
+```
+
+二维切片的基本格式为：
+
+```python
+tensor[row_start:row_stop:row_step, col_start:col_stop:col_step]
+```
+
+如果某个维度不需要切片，可以使用 `:` 保留该维度的全部元素。
+
+## 常用的 Tensor 操作
+
+### `torch.chunk`
+
+沿指定维度将 Tensor 拆分成若干块。
+
+```python
+torch.chunk(input, chunks, dim=0)
+```
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `input` | `Tensor` | 要拆分的 Tensor |
+| `chunks` | `int` | 希望拆分成的块数 |
+| `dim` | `int` | 拆分所沿的维度，默认是 `0` |
+
+示例：
+
+```python
+parts = torch.chunk(tensor, 2, dim=0)
+
+for part in parts:
+    print(part)
+```
+
+### `torch.cat`
+
+沿指定维度连接一组 Tensor。
+
+```python
+torch.cat(tensors, dim=0)
+```
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `tensors` | Tensor 序列 | 要连接的 Tensor 序列 |
+| `dim` | `int` | 连接所沿的维度，默认是 `0` |
+
+示例：
+
+```python
+result = torch.cat((tensor, tensor), dim=1)
+print(result)
+```
+
+### `torch.unsqueeze`
+
+在指定位置插入一个大小为 `1` 的维度。
+
+```python
+torch.unsqueeze(input, dim)
+```
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `input` | `Tensor` | 输入 Tensor |
+| `dim` | `int` | 新维度的插入位置 |
+
+示例：
+
+```python
+x = torch.tensor([1, 2, 3])
+y = torch.unsqueeze(x, dim=0)
+
+print(y)
+print(y.shape)
+```
+
+输出：
+
+```text
+tensor([[1, 2, 3]])
+torch.Size([1, 3])
+```
