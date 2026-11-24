@@ -1,5 +1,6 @@
 ## 1.Tensor的概念
-**Tensor**（张量）是人工智能、机器学习中非常基础的一个概念，是一种能够存储数字的数据结构，可以理解为单个数字到多维数组的统一形式。
+1.1
+  **Tensor**（张量）是人工智能、机器学习中非常基础的一个概念，是一种能够存储数字的数据结构，可以理解为单个数字到多维数组的统一形式。
 
 * **Tensor**维度的数学概念的对应：
 
@@ -27,7 +28,7 @@ print("3维张量 | ndim:", img.ndim, "| shape:", img.shape)
 
 > **小提示**：一维 Tensor 本身没有“行向量”和“列向量”之分，形状为 `torch.Size([n])`；需要显式区分行列时，通常会用二维形状 `(1, n)` 或 `(n, 1)`。
 
-## NumPy 与 Tensor 互转：`torch.from_numpy()`
+1.2 **NumPy 与 Tensor 互转**：`torch.from_numpy()`
 
 在 PyTorch 中，`Tensor` 是一种包含单一数据类型元素的多维矩阵（译作张量），与 NumPy 的 `ndarray` 很相似（一维叫 Vector，二维叫 Matrix，三维及以上称为 Tensor），两者可以相互转换[span_1](start_span)[span_1](end_span)。
 
@@ -51,11 +52,11 @@ print("torch tensor:", torch_data)
 > **踩坑注意**：通过 `torch.from_numpy()` 转换得到的 Tensor 和原 `ndarray` 在 CPU 上通常**共享内存**——修改其中一个的值，另一个也可能跟着变（如果不想共享，可以用 `.clone()` 拷贝一份）。
 
 
-# 3.Tensor 创建的多种方法
+# 2.Tensor 创建的多种方法
 
 PyTorch 提供了多种创建张量（Tensor）的方式。下面介绍通过形状、Python 序列和常用函数创建张量的方法。
 
-## 1. 根据形状创建张量
+## 2.1. 根据形状创建张量
 
 `torch.Tensor` 可以根据给定的维度创建张量。通过这种方式创建的张量是**未初始化的**，其中的值来自内存中的现有数据，不能假设为随机值或固定值。`torch.Tensor` 默认对应 `torch.FloatTensor`。
 
@@ -74,7 +75,7 @@ print(t1.shape)
 t2 = torch.empty(2, 2)
 ```
 
-## 2. 根据 Python 序列创建张量
+## 2.2 根据 Python 序列创建张量
 
 可以将 Python 列表等序列转换为张量。推荐使用 `torch.tensor()`，它会根据输入数据推断数据类型；也可以显式指定类型。
 
@@ -103,7 +104,7 @@ tensor([[1, 2, 3],
         [4, 5, 6]])
 ```
 
-## 3. 创建常用的特殊张量
+## 2.3. 创建常用的特殊张量
 
 | 方法 | 作用 |
 | --- | --- |
@@ -127,7 +128,7 @@ print(torch.rand(2, 2))
 print(torch.randn(2, 2))
 ```
 
-## 4. 查看张量的形状
+## 2.4. 查看张量的形状
 
 可以通过 `.size()` 或 `.shape` 查看张量的形状：
 
@@ -140,12 +141,12 @@ print(a.shape)   # torch.Size([2, 2])
 ```
 
 随机张量每次运行时的具体数值可能不同。
-```
-# Tensor 切片与索引
+
+# 3.Tensor的切片和索引
 
 本文介绍 PyTorch Tensor 的基本索引、切片，以及 `torch.chunk`、`torch.cat` 和 `torch.unsqueeze` 的用法。
 
-## 一维 Tensor 索引
+## 3.1一维 Tensor 索引
 
 一维 Tensor 的索引方式与 Python 列表类似。索引从 `0` 开始，范围是 `0` 到 `size - 1`。
 
@@ -169,7 +170,7 @@ tensor([0, 1, 2])
 
 当索引单个元素时，返回一个标量 Tensor；当索引一个范围时，返回包含对应元素的新 Tensor。切片的结束索引不包含在结果中，因此 `t[0:3]` 取的是索引 `0`、`1`、`2` 对应的元素。
 
-### 负索引
+### 3.2负索引
 
 Tensor 支持负索引。`-1` 表示最后一个元素，`-2` 表示倒数第二个元素，以此类推。
 
@@ -187,9 +188,10 @@ tensor([2, 3])
 tensor([0, 1, 2, 3])
 ```
 
-## Tensor 切片
 
-切片的基本格式为：
+## 3.3Tensor 切片
+
+*切片的基本格式为：
 
 ```python
 tensor[start:stop:step]
@@ -217,7 +219,7 @@ tensor([2, 4])
 
 以上切片从索引 `2` 开始，到索引 `5` 之前结束，步长为 `2`。
 
-## 二维 Tensor 索引与切片
+## 3.4二维 Tensor 索引与切片
 
 二维 Tensor 可以分别对行和列进行索引。索引某一行时，返回的 Tensor 维度会减少。
 
@@ -253,7 +255,7 @@ tensor[row_start:row_stop:row_step, col_start:col_stop:col_step]
 
 如果某个维度不需要切片，可以使用 `:` 保留该维度的全部元素。
 
-## 常用的 Tensor 操作
+## 3.5常用的 Tensor 操作
 
 ### `torch.chunk`
 
