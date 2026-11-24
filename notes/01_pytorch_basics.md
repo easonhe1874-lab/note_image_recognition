@@ -329,3 +329,77 @@ print(y.shape)
 tensor([[1, 2, 3]])
 torch.Size([1, 3])
 ```
+# 4. Tensor 的数学运算
+
+## 4.1 加法
+
+两个形状相同的 Tensor 可以通过多种方式相加。下面以 `x` 和 `y` 为例：
+
+```python
+import torch
+
+x = torch.rand(2, 3)
+y = torch.rand(2, 3)
+```
+
+### 写法一：使用 `+`
+
+```python
+result = x + y
+print(result)
+```
+
+### 写法二：使用 `torch.add`
+
+```python
+result = torch.add(x, y)
+print(result)
+```
+
+### 写法三：使用 `add_` 原地修改
+
+```python
+y.add_(x)
+print(y)
+```
+
+以 `_` 结尾的许多 PyTorch 操作会原地修改 Tensor。例如，`y.add_(x)` 会将结果写回 `y`；而 `y.add(x)` 会返回一个新 Tensor，不会修改 `y`。
+
+## 4.2 常用数学函数
+
+设有一个 Tensor `t`：
+
+| 函数 | 说明 |
+|---|---|
+| `torch.sqrt(t)` | 返回元素的平方根 |
+| `torch.round(t)` | 将元素舍入到最接近的整数 |
+| `torch.sign(t)` | 返回元素的符号：正数为 `1`，负数为 `-1`，零为 `0` |
+| `torch.abs(t)` | 返回元素的绝对值 |
+| `torch.ceil(t)` | 将元素向上舍入到不小于它的最小整数 |
+| `torch.cos(t)` | 返回元素的余弦值 |
+| `torch.sin(t)` | 返回元素的正弦值 |
+
+### 示例：向上取整
+
+```python
+import torch
+
+a = torch.randn(4)
+
+print(a)
+print(torch.ceil(a))
+```
+
+例如，输入为：
+
+```text
+tensor([-1.0305, 1.3372, 0.0820, -1.1551])
+```
+
+调用 `torch.ceil(a)` 后得到：
+
+```text
+tensor([-1., 2., 1., -1.])
+```
+
+> 注意：`torch.transpose` 需要指定要交换的两个维度，例如 `torch.transpose(t, 0, 1)`。对于二维 Tensor，也可以使用 `t.T` 获取转置结果。
